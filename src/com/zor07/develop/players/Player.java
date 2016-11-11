@@ -25,7 +25,7 @@ public abstract class Player{
     /**
      * Кол-во кораблей для потопления
      */
-   int shipsToKill = 1;
+   int shipsToKill = 10;
 
     /**
      * Результат выстрела

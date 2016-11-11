@@ -50,6 +50,16 @@ public class HumanPlayer extends Player implements ActionListener {
     }
 
     /**
+     * Добавляем обработчик нажатий на ячейки оппонента
+     * @param opponent оппонент игрока
+     */
+    @Override
+    public void setOpponent(Player opponent) {
+        super.setOpponent(opponent);
+        setActionListnerToCells();
+    }
+
+    /**
      * После выстрела, если корабль врага был потоплен декриментируем shipsToKill
      * Извлекаем сообщение из MessageManager
      * @param x координата Х ячейки на игровом поле, в которую производился последний выстрел
