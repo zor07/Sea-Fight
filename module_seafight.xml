@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_seafight" default="compile.module.seafight">
+  <dirname property="module.seafight.basedir" file="${ant.file.module_seafight}"/>
+  
+  <property name="module.jdk.home.seafight" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.seafight" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.seafight" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.seafight" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="seafight.output.dir" value="${module.seafight.basedir}/out/production/seaFight"/>
+  <property name="seafight.testoutput.dir" value="${module.seafight.basedir}/out/test/seaFight"/>
+  
+  <path id="seafight.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="seafight.module.production.classpath">
+    <path refid="${module.jdk.classpath.seafight}"/>
+  </path>
+  
+  <path id="seafight.runtime.production.module.classpath">
+    <pathelement location="${seafight.output.dir}"/>
+  </path>
+  
+  <path id="seafight.module.classpath">
+    <path refid="${module.jdk.classpath.seafight}"/>
+    <pathelement location="${seafight.output.dir}"/>
+  </path>
+  
+  <path id="seafight.runtime.module.classpath">
+    <pathelement location="${seafight.testoutput.dir}"/>
+    <pathelement location="${seafight.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.seafight">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.seafight">
+    <patternset refid="excluded.from.module.seafight"/>
+  </patternset>
+  
+  <path id="seafight.module.sourcepath">
+    <dirset dir="${module.seafight.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.seafight" depends="compile.module.seafight.production,compile.module.seafight.tests" description="Compile module seaFight"/>
+  
+  <target name="compile.module.seafight.production" depends="register.custom.compilers" description="Compile module seaFight; production classes">
+    <mkdir dir="${seafight.output.dir}"/>
+    <javac2 destdir="${seafight.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.seafight}/javac">
+      <compilerarg line="${compiler.args.seafight}"/>
+      <bootclasspath refid="seafight.module.bootclasspath"/>
+      <classpath refid="seafight.module.production.classpath"/>
+      <src refid="seafight.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.seafight"/>
+    </javac2>
+    
+    <copy todir="${seafight.output.dir}">
+      <fileset dir="${module.seafight.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.seafight.tests" depends="register.custom.compilers,compile.module.seafight.production" description="compile module seaFight; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.seafight" description="cleanup module">
+    <delete dir="${seafight.output.dir}"/>
+    <delete dir="${seafight.testoutput.dir}"/>
+  </target>
+</project>

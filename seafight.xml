@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="seafight" default="all">
+  
+  
+  <property file="seafight.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.ear"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.7" value="${jdk.home.1.7}/bin"/>
+  <path id="jdk.classpath.1.7">
+    <fileset dir="${jdk.home.1.7}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/access-bridge-64.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxrt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module seaFight -->
+  
+  <dirname property="module.seafight.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.seafight" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.seafight" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.seafight" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.seafight" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="seafight.output.dir" value="${module.seafight.basedir}/out/production/seaFight"/>
+  <property name="seafight.testoutput.dir" value="${module.seafight.basedir}/out/test/seaFight"/>
+  
+  <path id="seafight.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="seafight.module.production.classpath">
+    <path refid="${module.jdk.classpath.seafight}"/>
+  </path>
+  
+  <path id="seafight.runtime.production.module.classpath">
+    <pathelement location="${seafight.output.dir}"/>
+  </path>
+  
+  <path id="seafight.module.classpath">
+    <path refid="${module.jdk.classpath.seafight}"/>
+    <pathelement location="${seafight.output.dir}"/>
+  </path>
+  
+  <path id="seafight.runtime.module.classpath">
+    <pathelement location="${seafight.testoutput.dir}"/>
+    <pathelement location="${seafight.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.seafight">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.seafight">
+    <patternset refid="excluded.from.module.seafight"/>
+  </patternset>
+  
+  <path id="seafight.module.sourcepath">
+    <dirset dir="${module.seafight.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.seafight" depends="compile.module.seafight.production,compile.module.seafight.tests" description="Compile module seaFight"/>
+  
+  <target name="compile.module.seafight.production" depends="register.custom.compilers" description="Compile module seaFight; production classes">
+    <mkdir dir="${seafight.output.dir}"/>
+    <javac2 destdir="${seafight.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.seafight}/javac">
+      <compilerarg line="${compiler.args.seafight}"/>
+      <bootclasspath refid="seafight.module.bootclasspath"/>
+      <classpath refid="seafight.module.production.classpath"/>
+      <src refid="seafight.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.seafight"/>
+    </javac2>
+    
+    <copy todir="${seafight.output.dir}">
+      <fileset dir="${module.seafight.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.seafight.tests" depends="register.custom.compilers,compile.module.seafight.production" description="compile module seaFight; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.seafight" description="cleanup module">
+    <delete dir="${seafight.output.dir}"/>
+    <delete dir="${seafight.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.seafight" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.seafight" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
